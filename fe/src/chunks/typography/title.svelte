@@ -14,6 +14,7 @@
         stroke="url(#paint0_linear_132_110)"
         stroke-width="5"
         stroke-linecap="round"
+        fill="none"
       />
       <defs>
         <linearGradient

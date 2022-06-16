@@ -1,7 +1,7 @@
 <script lang="ts">
   // states
   let currAge: string = "age";
-  let ageValue: null | string = null;
+  let ageValue: null | number = null;
   let ageDPdisplay: string = "";
 
   //----------- display the dropdown
@@ -12,6 +12,7 @@
   // ---------- check the input is a number
   const handleSelectAge = (age: number) => {
     ageDPdisplay = " ";
+    ageValue = age;
     currAge = age.toString();
   };
 </script>
@@ -60,6 +61,7 @@
 <style>
   .main-wrapper {
     width: 50%;
+    height: 5rem;
   }
   .input-wrapper {
     margin: var(--small-spacing) 0;

@@ -30,7 +30,7 @@
   .input-wrapper {
     margin: var(--medium-spacing) auto;
     width: 100%;
-    height: 2rem;
+    height: 5rem;
   }
 
   .input-wrapper input {
@@ -50,5 +50,6 @@
   .svg-wrapper {
     width: 100%;
     margin: 0;
+    transform: translateY(-2rem);
   }
 </style>
