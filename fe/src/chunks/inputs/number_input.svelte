@@ -1,39 +1,45 @@
 <script lang="ts">
   // states
   let currAge: string = "age";
+  let ageValue: null | string = null;
   let ageDPdisplay: string = "";
+
+  //----------- display the dropdown
+  const handleDisplayDP = () => {
+    ageDPdisplay = "age-dropdown-display";
+  };
+
   // ---------- check the input is a number
   const handleSelectAge = (age: number) => {
+    ageDPdisplay = " ";
     currAge = age.toString();
-    ageDPdisplay = "";
   };
 </script>
 
-<div
-  class="main-wrapper"
-  onclick={(e) => (ageDPdisplay = "age-dropdown-display")}
->
+<div class="main-wrapper">
   <div class="input-wrapper">
     <!-- hidden input -->
     <input
       type="number"
       maxlength="3"
       class="std-input hidden"
+      id="hidden-input"
       placeholder=""
+      value={ageValue}
       required
     />
 
     <!---------- age dropdown --------->
     <div class="age-dropdown {ageDPdisplay}">
       {#each new Array(15) as age, i}
-        <p class="std-flex-row" onclick={() => handleSelectAge(i + 1)}>
+        <p class="std-flex-row" on:click={() => handleSelectAge(i + 1)}>
           {i + 1}
         </p>
       {/each}
     </div>
 
     <!---------- current age --------->
-    <p class="std-input currAge">
+    <p class="std-input currAge" on:click={handleDisplayDP}>
       {currAge}
     </p>
 
@@ -56,24 +62,16 @@
     width: 50%;
   }
   .input-wrapper {
-    margin: var(--medium-spacing) 0;
+    margin: var(--small-spacing) 0;
     width: 100%;
     height: 2rem;
     position: relative;
+    cursor: pointer;
   }
 
   .input-wrapper input {
     display: none;
     margin: 0;
-  }
-
-  .svg-wrapper {
-    width: 100%;
-    margin: 0;
-  }
-
-  .svg-wrapper svg {
-    width: 100%;
   }
 
   .currAge {
@@ -82,8 +80,10 @@
     color: var(--secondary-color);
     margin: 0;
     text-align: left;
+    height: 2em;
   }
 
+  /* ------ drop down ----- */
   .age-dropdown {
     display: none;
     width: 100%;
@@ -92,6 +92,9 @@
     overflow-y: scroll;
     background-color: var(--accent-color);
     border-radius: 1rem;
+    z-index: 2;
+    top: 0;
+    left: 0;
   }
 
   .age-dropdown:hover {
@@ -110,5 +113,16 @@
 
   .age-dropdown-display {
     display: block;
+  }
+
+  /* ------ svg ----- */
+  .svg-wrapper {
+    width: 100%;
+    margin: 0;
+    transform: translateY(-1.5rem);
+  }
+
+  .svg-wrapper svg {
+    width: 100%;
   }
 </style>
