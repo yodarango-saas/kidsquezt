@@ -1,6 +1,6 @@
 <script lang="ts">
   // excpor let current title
-  const currentTitle: number = 0;
+  export let currentTitle: string = "child";
 
   // components
   import RadioInput from "../../chunks/inputs/radio_input.svelte";
@@ -9,33 +9,71 @@
   import Primary from "../../chunks/buttons/primary.svelte";
   import Back from "../..//chunks/buttons/back.svelte";
   import Parragraph from "../../chunks/typography/parragraph.svelte";
+  import ImageInput from "../../chunks/inputs/image_input.svelte";
 
   // states
   let currentSection: number = 0;
   let currenstSectionClass: string = "";
+  let allowOtherPickUpParty: boolean = false;
+  let diplaySubmitForm: boolean = false;
 
+  // --------- chnage the title of the current form section
+  const handleTitleChange = (chosenOption) => {
+    console.log(chosenOption);
+    switch (chosenOption) {
+      case 0:
+        currentTitle = "child";
+        break;
+      case 1:
+        currentTitle = "guardian";
+        break;
+      case 2:
+        currentTitle = "child";
+        break;
+    }
+  };
   // --------- serve the next portion of the form
   const handleNextFormSection = () => {
+    handleTitleChange(currentSection + 1);
     currentSection += 1;
     currenstSectionClass = "swapfwd";
   };
 
   // --------- serve the previos portion of the form only if teh currentSeciton is greater than 0
   const handlePrevFormSection = () => {
+    handleTitleChange(currentSection - 1);
     currentSection -= 1;
     currenstSectionClass = "swapbkwd";
+  };
+
+  // ------------ handle the pick up child option
+  const handlePickupChildOption = (evt) => {
+    const chosenOption = evt.detail.option;
+
+    chosenOption === 1
+      ? (allowOtherPickUpParty = true)
+      : (allowOtherPickUpParty = false);
+  };
+
+  // ----------- handle form submission and child registration
+  const handleRegistration = (e) => {
+    e.preventDefault();
+    console.log(e.serializeArray());
   };
 </script>
 
 <div class="form-wrapper">
   <!------- from  ---------->
-  <form class="registration-form std-flex-justify-start">
+  <form
+    class="registration-form std-flex-justify-start"
+    on:submit={handleRegistration}
+  >
     <!----- first section  -->
     {#if currentSection === 0}
       <div class="form-section-wrapper initial {currenstSectionClass}">
         <TextInput placeholder="first name" />
         <TextInput placeholder="last name" />
-        <NumberInput />
+        <NumberInput startAt={4} endAt={11} />
         <RadioInput
           value={{ first: "male", second: "femle" }}
           valueLabel={{ first: "m", second: "f" }}
@@ -48,8 +86,9 @@
       <div class="form-section-wrapper {currenstSectionClass}">
         <TextInput placeholder="first name" />
         <TextInput placeholder="last name" />
+        <TextInput placeholder="phone number" type="phone" />
         <Parragraph
-          text="can someone else pick up your child?"
+          text="is someone else allowed to pick up your child?"
           font="f-secondary"
           color="c-primary"
           align="left"
@@ -57,19 +96,45 @@
         <RadioInput
           value={{ first: "yes", second: "no" }}
           valueLabel={{ first: "y", second: "n" }}
+          on:action={handlePickupChildOption}
         />
+
+        <!-- allow other pick up -->
+        {#if allowOtherPickUpParty}
+          <Parragraph
+            text="who?"
+            font="f-secondary"
+            color="c-primary"
+            align="left"
+          />
+          <TextInput placeholder="first name" />
+          <TextInput placeholder="last name" />
+        {/if}
       </div>
 
       <!------- third section  -------->
     {:else}
-      <!-- else content here -->
+      <div class="form-section-wrapper initial {currenstSectionClass}">
+        <div class="input-image-wrapper">
+          <ImageInput on:uploadDone={() => (diplaySubmitForm = true)} />
+        </div>
+      </div>
+    {/if}
+
+    {#if diplaySubmitForm}
+      <Primary text="Done" type="submit" />
     {/if}
   </form>
 
+  <div class="std-spacer-xl" />
+  <div class="std-spacer-xl" />
+
   <!------- buttons ---------->
-  <div class="button-wrapper_fwd">
-    <Primary on:action={handleNextFormSection} />
-  </div>
+  {#if currentSection < 2}
+    <div class="button-wrapper_fwd">
+      <Primary on:action={handleNextFormSection} text="Next" />
+    </div>
+  {/if}
 
   {#if currentSection > 0}
     <div class="button-wrapper_bkwd">
@@ -149,12 +214,15 @@
   .button-wrapper_fwd {
     position: absolute;
     right: 2rem;
-    bottom: -8rem;
+    bottom: 0rem;
   }
 
   .button-wrapper_bkwd {
     position: absolute;
     left: 2rem;
-    bottom: -8.2rem;
+    bottom: 0rem;
+  }
+  .input-image-wrapper {
+    margin: var(--medium-spacing) auto 0;
   }
 </style>

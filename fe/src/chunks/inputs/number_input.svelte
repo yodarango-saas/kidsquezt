@@ -1,4 +1,7 @@
 <script lang="ts">
+  // props
+  export let startAt: number = 0;
+  export let endAt: number = 0;
   // states
   let currAge: string = "age";
   let ageValue: null | number = null;
@@ -32,9 +35,9 @@
 
     <!---------- age dropdown --------->
     <div class="age-dropdown {ageDPdisplay}">
-      {#each new Array(15) as age, i}
+      {#each new Array(endAt) as age, i}
         <p class="std-flex-row" on:click={() => handleSelectAge(i + 1)}>
-          {i + 1}
+          {i + startAt}
         </p>
       {/each}
     </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  let headerTitle: string = "child";
   // components
   import RegisterChild from "../layouts/forms/register_child.svelte";
   import Title from "../chunks/typography/title.svelte";
@@ -9,12 +10,11 @@
 <div class="image-wrapper">
   <Biggest src="/images/logo.png" alt="kidz quest logo" />
 </div>
-
 <!---------- title  ------------->
-<Title title="child" />
+<Title title={headerTitle} />
 
 <!---------- from  ------------->
-<RegisterChild />
+<RegisterChild bind:currentTitle={headerTitle} />
 
 <style>
   /* ----- image wrapper ----- */

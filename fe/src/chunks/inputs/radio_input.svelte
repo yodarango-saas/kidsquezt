@@ -1,4 +1,8 @@
 <script lang="ts">
+  // svelte
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
+
   // types
   type TselectedInputColor = { male: string; female: string };
   type TselectedInput = { male: boolean; female: boolean };
@@ -8,6 +12,7 @@
   export let value: TinputValues = { first: "", second: "" };
   export let label: string = "";
   export let valueLabel: TinputValues = { first: "", second: "" };
+  export const action: MouseEvent | null = null;
 
   // states
   let selectedInput: TselectedInput = {
@@ -21,12 +26,13 @@
 
   // -------- handle the gender choice
   const handleGenderChoice = (gender: number) => {
-    console.log(gender);
     gender === 1
       ? ((selectedGenderColor = { male: "selected", female: "" }),
         (selectedInput = { male: true, female: false }))
       : ((selectedGenderColor = { male: "", female: "selected" }),
         (selectedInput = { male: false, female: true }));
+
+    dispatch("action", { option: gender });
   };
 </script>
 

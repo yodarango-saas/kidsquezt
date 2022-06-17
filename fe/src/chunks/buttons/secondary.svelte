@@ -1,7 +1,6 @@
 <script lang="ts">
   // props
   export let text: string = "";
-  export let type: string = "";
 
   // svlete
   import { createEventDispatcher } from "svelte";
@@ -10,49 +9,30 @@
 
 <div class="btn-wrapper" on:click={() => dispatch("action")}>
   <!------------- button ----------------------->
-  <button class="std-button button" {type}>
+  <button class="std-button button">
     <p class="std-gradient-text">{text}</p>
   </button>
 
   <!------------- svg arrow ----------------------->
   <div class="svg-wrapper">
-    <svg viewBox="0 0 191 35">
+    <svg viewBox="0 0 360 23" fill="none">
       <path
-        d="M4 22C14.7653 21.8634 25.1907 20.1563 35.8958 19.5041C54.9562 18.3428 73.8543 17.0602 93.0115 17.0081C122.189 16.9288 150.937 17.427 180 18.6721"
-        stroke="url(#paint0_linear_132_202)"
-        stroke-width="7"
+        d="M5.05737 11.8052C15.8539 11.8052 26.6505 11.8052 37.447 11.8052C46.2264 11.8052 54.6199 14.5048 63.1682 14.6631C79.0741 14.9577 94.9942 13.8239 110.8 15.8275C123.986 17.499 140.758 18.3589 153.457 14.4514C168.671 9.77022 182.26 6.74168 198.442 6.14234C233.438 4.84623 268.69 6.08942 303.709 6.08942C314.311 6.08942 324.914 6.08942 335.516 6.08942C338.642 6.08942 341.221 7.8294 344.196 7.99469C347.577 8.18255 351.033 8.94733 354.675 8.94733"
+        stroke="url(#paint0_linear_156_9)"
+        stroke-width="10"
         stroke-linecap="round"
-        fill="none"
-      />
-      <path
-        d="M164.688 4C171.006 9.97648 178.82 15.2879 186.002 20.1614C188.733 22.0144 181.609 22.9838 180.927 23.1282C174.088 24.5758 168.588 27.2683 162.58 30.7014"
-        stroke="url(#paint1_linear_132_202)"
-        stroke-width="7"
-        stroke-linecap="round"
-        fill="none"
       />
       <defs>
         <linearGradient
-          id="paint0_linear_132_202"
-          x1="4"
-          y1="22"
-          x2="242.5"
-          y2="20"
+          id="paint0_linear_156_9"
+          x1="-22"
+          y1="16.9998"
+          x2="422"
+          y2="5.99987"
           gradientUnits="userSpaceOnUse"
         >
           <stop stop-color="#04FED1" />
           <stop offset="1" stop-color="#1400FF" />
-        </linearGradient>
-        <linearGradient
-          id="paint1_linear_132_202"
-          x1="183.5"
-          y1="19"
-          x2="156.5"
-          y2="18"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stop-color="#04FED1" />
-          <stop offset="1" stop-color="#0E5CEE" />
         </linearGradient>
       </defs>
     </svg>
@@ -63,7 +43,7 @@
   /* ------- button ---------- */
   .btn-wrapper {
     display: block;
-    width: 10rem;
+    width: 100%;
     position: relative;
   }
 
@@ -93,7 +73,7 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    bottom: -1.2rem;
+    bottom: -2rem;
     left: 0;
   }
 
