@@ -1,5 +1,15 @@
 <script lang="ts">
-  // excpor let current title
+  // svelte
+  import { onMount } from "svelte";
+
+  // types
+  type TdisplayStatus = {
+    first: string;
+    second: string;
+    third: string;
+  };
+
+  // props
   export let currentTitle: string = "child";
 
   // components
@@ -15,11 +25,22 @@
   let currentSection: number = 0;
   let currenstSectionClass: string = "";
   let allowOtherPickUpParty: boolean = false;
-  let diplaySubmitForm: boolean = false;
+  let displaySubmitForm: boolean = false;
+  let displayStatus: TdisplayStatus = {
+    first: "display",
+    second: "",
+    third: "",
+  };
+
+  // DOM Refs
+  let inputs: any;
+
+  onMount(() => {
+    inputs = document.getElementsByTagName("input");
+  });
 
   // --------- chnage the title of the current form section
   const handleTitleChange = (chosenOption) => {
-    console.log(chosenOption);
     switch (chosenOption) {
       case 0:
         currentTitle = "child";
@@ -37,6 +58,17 @@
     handleTitleChange(currentSection + 1);
     currentSection += 1;
     currenstSectionClass = "swapfwd";
+    switch (currentSection) {
+      case 0:
+        displayStatus = { first: "display", second: "", third: "" };
+        break;
+      case 1:
+        displayStatus = { first: "", second: "display", third: "" };
+        break;
+      case 2:
+        displayStatus = { first: "", second: "", third: "display" };
+        break;
+    }
   };
 
   // --------- serve the previos portion of the form only if teh currentSeciton is greater than 0
@@ -44,6 +76,17 @@
     handleTitleChange(currentSection - 1);
     currentSection -= 1;
     currenstSectionClass = "swapbkwd";
+    switch (currentSection) {
+      case 0:
+        displayStatus = { first: "display", second: "", third: "" };
+        break;
+      case 1:
+        displayStatus = { first: "", second: "display", third: "" };
+        break;
+      case 2:
+        displayStatus = { first: "", second: "", third: "display" };
+        break;
+    }
   };
 
   // ------------ handle the pick up child option
@@ -56,73 +99,93 @@
   };
 
   // ----------- handle form submission and child registration
-  const handleRegistration = (e) => {
-    e.preventDefault();
-    console.log(e.serializeArray());
+  const handleFormSubmission = () => {
+    const formData = {};
+    for (let i = 0; i < inputs.length; i++) {
+      if (!inputs[i].value) {
+        alert(`${inputs[i].placeholder} is required`);
+        return;
+      }
+      formData[inputs[i].name] = inputs[i].value;
+    }
   };
 </script>
 
 <div class="form-wrapper">
   <!------- from  ---------->
-  <form
-    class="registration-form std-flex-justify-start"
-    on:submit={handleRegistration}
-  >
+  <form class="registration-form std-flex-justify-start" id="form">
     <!----- first section  -->
-    {#if currentSection === 0}
-      <div class="form-section-wrapper initial {currenstSectionClass}">
-        <TextInput placeholder="first name" />
-        <TextInput placeholder="last name" />
-        <NumberInput startAt={4} endAt={11} />
-        <RadioInput
-          value={{ first: "male", second: "femle" }}
-          valueLabel={{ first: "m", second: "f" }}
-          label="gender"
-        />
-      </div>
+    <div
+      class="form-section-wrapper initial {currenstSectionClass} {displayStatus.first}"
+    >
+      <TextInput placeholder="first name" req={true} name="child_fn" />
+      <TextInput placeholder="last name" req={true} name="child_ln" />
+      <NumberInput startAt={4} endAt={11} name="age" />
+      <RadioInput
+        value={{ first: "male", second: "female" }}
+        valueLabel={{ first: "m", second: "f" }}
+        label="gender"
+      />
+    </div>
 
-      <!----- second section  -->
-    {:else if currentSection === 1}
-      <div class="form-section-wrapper {currenstSectionClass}">
-        <TextInput placeholder="first name" />
-        <TextInput placeholder="last name" />
-        <TextInput placeholder="phone number" type="phone" />
+    <!----- second section  -->
+    <div
+      class="form-section-wrapper {currenstSectionClass} {displayStatus.second}"
+    >
+      <TextInput placeholder="first name" req={true} name="guardian_fn" />
+      <TextInput placeholder="last name" req={true} name="guardian_ln" />
+      <TextInput placeholder="phone number" type="phone" name="phone" />
+      <Parragraph
+        text="is someone else allowed to pick up your child?"
+        font="f-secondary"
+        color="c-primary"
+        align="left"
+      />
+      <RadioInput
+        value={{ first: "yes", second: "no" }}
+        valueLabel={{ first: "y", second: "n" }}
+        on:action={handlePickupChildOption}
+      />
+
+      <!-- allow other pick up -->
+      {#if allowOtherPickUpParty}
         <Parragraph
-          text="is someone else allowed to pick up your child?"
+          text="who?"
           font="f-secondary"
           color="c-primary"
           align="left"
         />
-        <RadioInput
-          value={{ first: "yes", second: "no" }}
-          valueLabel={{ first: "y", second: "n" }}
-          on:action={handlePickupChildOption}
+        <TextInput
+          placeholder="first name"
+          req={true}
+          name="second_guardia_fn"
         />
+        <TextInput
+          placeholder="last name"
+          req={true}
+          name="second_guardia_ln"
+        />
+      {/if}
+    </div>
 
-        <!-- allow other pick up -->
-        {#if allowOtherPickUpParty}
-          <Parragraph
-            text="who?"
-            font="f-secondary"
-            color="c-primary"
-            align="left"
-          />
-          <TextInput placeholder="first name" />
-          <TextInput placeholder="last name" />
-        {/if}
+    <!------- third section  -------->
+    <div
+      class="form-section-wrapper {currenstSectionClass} {displayStatus.third}"
+    >
+      <div class="input-image-wrapper">
+        <ImageInput
+          on:uploadDone={() => (displaySubmitForm = true)}
+          defaultImgSource="images/icons/profile.png"
+          btnText="submit photo"
+          name="child_photo"
+        />
       </div>
+    </div>
 
-      <!------- third section  -------->
-    {:else}
-      <div class="form-section-wrapper initial {currenstSectionClass}">
-        <div class="input-image-wrapper">
-          <ImageInput on:uploadDone={() => (diplaySubmitForm = true)} />
-        </div>
+    {#if displaySubmitForm && currentSection === 2}
+      <div class="button-wrapper_fwd">
+        <Primary text="Done" type="submit" on:action={handleFormSubmission} />
       </div>
-    {/if}
-
-    {#if diplaySubmitForm}
-      <Primary text="Done" type="submit" />
     {/if}
   </form>
 
@@ -161,9 +224,14 @@
 
   /* --------- sections --------- */
   .form-section-wrapper {
+    display: none;
     opacity: 0;
     width: 80%;
     margin: auto;
+  }
+
+  .form-section-wrapper.display {
+    display: block;
   }
 
   .initial {

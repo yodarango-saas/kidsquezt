@@ -4,16 +4,24 @@
   export let maxLength: number = 140;
   export let req: boolean = true;
   export let placeholder: string = "";
+  export let name: string;
 </script>
 
 <div class="input-wrapper">
-  <input
-    {type}
-    maxlength={maxLength}
-    class="std-input"
-    {placeholder}
-    required={req}
-  />
+  <!-- check if the field isrequired to render appropiately -->
+  {#if req}
+    <input
+      {type}
+      maxlength={maxLength}
+      class="std-input"
+      {placeholder}
+      {name}
+      required
+    />
+  {:else}
+    <input {type} maxlength={maxLength} class="std-input" {placeholder} />
+  {/if}
+
   <div class="svg-wrapper">
     <svg viewBox="0 0 356 9">
       <path

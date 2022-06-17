@@ -2,10 +2,14 @@
   // props
   export let startAt: number = 0;
   export let endAt: number = 0;
+  export let req: boolean = true;
+  export let name: string;
+
   // states
   let currAge: string = "age";
   let ageValue: null | number = null;
   let ageDPdisplay: string = "";
+  let currAgeisSelected: string = "";
 
   //----------- display the dropdown
   const handleDisplayDP = () => {
@@ -16,6 +20,7 @@
   const handleSelectAge = (age: number) => {
     ageDPdisplay = " ";
     ageValue = age;
+    currAgeisSelected = "selected";
     currAge = age.toString();
   };
 </script>
@@ -23,15 +28,27 @@
 <div class="main-wrapper">
   <div class="input-wrapper">
     <!-- hidden input -->
-    <input
-      type="number"
-      maxlength="3"
-      class="std-input hidden"
-      id="hidden-input"
-      placeholder=""
-      value={ageValue}
-      required
-    />
+    {#if req}
+      <input
+        type="number"
+        maxlength="3"
+        class="std-input hidden"
+        id="hidden-input"
+        placeholder=""
+        value={ageValue}
+        {name}
+        required
+      />
+    {:else}
+      <input
+        type="number"
+        maxlength="3"
+        class="std-input hidden"
+        id="hidden-input"
+        placeholder=""
+        value={ageValue}
+      />
+    {/if}
 
     <!---------- age dropdown --------->
     <div class="age-dropdown {ageDPdisplay}">
@@ -43,7 +60,7 @@
     </div>
 
     <!---------- current age --------->
-    <p class="std-input currAge" on:click={handleDisplayDP}>
+    <p class="std-input currAge {currAgeisSelected}" on:click={handleDisplayDP}>
       {currAge}
     </p>
 
@@ -86,6 +103,10 @@
     margin: 0;
     text-align: left;
     height: 2em;
+  }
+
+  .currAge.selected {
+    color: var(--primary-color);
   }
 
   /* ------ drop down ----- */

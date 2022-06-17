@@ -1,7 +1,7 @@
 <script lang="ts">
   // props
   export let text: string = "";
-  export let type: string = "";
+  export let type: string = "button";
 
   // svlete
   import { createEventDispatcher } from "svelte";

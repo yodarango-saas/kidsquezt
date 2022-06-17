@@ -4,11 +4,17 @@
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();
 
+  // props
+  export let btnText: string = "";
+  export let defaultImgSource: string = "";
+  export let req: boolean = true;
+  export let name: string;
+
   // components
   import Secondary from "../buttons/secondary.svelte";
 
   // states
-  let blobImage: string = "images/icons/profile.png";
+  let blobImage: string = defaultImgSource;
   let alt: string = "content";
   let imageBlobInput: string = "";
 
@@ -30,6 +36,7 @@
 
   //----------- resize the image to 400 X 400
   const handleImageCompression = (e) => {
+    const imagePath = e.path[0].currentSrc;
     // get the size of the blob image loaded on the img element
     // and resize it to the desired pixels
     const scaleSize = 400 / e.target.width;
@@ -43,6 +50,11 @@
     // convert the compressed canvas to base64
     const srcEncoded = ctx.canvas.toDataURL(e.target, "image/jpg");
     imageBlobInput = srcEncoded;
+
+    // call the action function you want to trigger once the upload is done
+    if (!imagePath.includes(defaultImgSource)) {
+      dispatch("uploadDone");
+    }
   };
 
   //  ----------- trigger the input upload
@@ -62,7 +74,7 @@
   </div>
 
   <div class="button-wrapper">
-    <Secondary text="Upload Image" on:action={triggerUpload} />
+    <Secondary text={btnText} on:action={triggerUpload} />
   </div>
 
   <!------------- hidden inputs ------------>
@@ -72,14 +84,20 @@
     accept="image/*"
     on:change={handleImageConvertion}
     class="idden-input"
+    name="original_image"
   />
-  <input
-    type="text"
-    class="hidden-input"
-    required
-    value={imageBlobInput}
-    on:change={() => dispatch("uploadDone")}
-  />
+  {#if req}
+    <input
+      type="text"
+      class="hidden-input"
+      value={imageBlobInput}
+      {name}
+      required
+    />
+  {:else}
+    <input type="text" class="hidden-input" value={imageBlobInput} {name} />
+  {/if}
+
   <canvas id="canvas" class="hidden" />
 </div>
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   // props
   export let text: string = "";
+  export let type: string = "button";
 
   // svlete
   import { createEventDispatcher } from "svelte";
@@ -9,7 +10,7 @@
 
 <div class="btn-wrapper" on:click={() => dispatch("action")}>
   <!------------- button ----------------------->
-  <button class="std-button button">
+  <button class="std-button button" {type}>
     <p class="std-gradient-text">{text}</p>
   </button>
 

@@ -4,8 +4,8 @@
   const dispatch = createEventDispatcher();
 
   // types
-  type TselectedInputColor = { male: string; female: string };
-  type TselectedInput = { male: boolean; female: boolean };
+  type TselectedInputColor = { first: string; second: string };
+  type TselectedInput = { first: boolean; second: boolean };
   type TinputValues = { first: string; second: string };
 
   //props
@@ -13,45 +13,65 @@
   export let label: string = "";
   export let valueLabel: TinputValues = { first: "", second: "" };
   export const action: MouseEvent | null = null;
+  export let req: boolean = true;
 
   // states
   let selectedInput: TselectedInput = {
-    male: false,
-    female: false,
+    first: false,
+    second: false,
   };
-  let selectedGenderColor: TselectedInputColor = {
-    male: "",
-    female: "",
+  let selectedoptionColor: TselectedInputColor = {
+    first: "",
+    second: "",
   };
 
-  // -------- handle the gender choice
-  const handleGenderChoice = (gender: number) => {
-    gender === 1
-      ? ((selectedGenderColor = { male: "selected", female: "" }),
-        (selectedInput = { male: true, female: false }))
-      : ((selectedGenderColor = { male: "", female: "selected" }),
-        (selectedInput = { male: false, female: true }));
+  // -------- handle the option choice
+  const handleoptionChoice = (option: number) => {
+    option === 1
+      ? ((selectedoptionColor = { first: "selected", second: "" }),
+        (selectedInput = { first: true, second: false }))
+      : ((selectedoptionColor = { first: "", second: "selected" }),
+        (selectedInput = { first: false, second: true }));
 
-    dispatch("action", { option: gender });
+    dispatch("action", { option });
   };
 </script>
 
 <!-------------- hidden input --------------->
 <div class="input-wrapper">
-  <input
-    type="radio"
-    id="gender"
-    name="gander"
-    value={value.first}
-    checked={selectedInput.male}
-  />
-  <input
-    type="radio"
-    id="gender"
-    name="gander"
-    value={value.second}
-    checked={selectedInput.female}
-  />
+  {#if req}
+    <input
+      type="radio"
+      id="input-option"
+      name="input-option"
+      value={value.first}
+      checked={selectedInput.first}
+      required
+    />
+    <input
+      type="radio"
+      id="input-option"
+      name="input-option"
+      value={value.second}
+      checked={selectedInput.second}
+      required
+    />
+  {:else}
+    <input
+      type="radio"
+      id="input-option"
+      name="input-option"
+      value={value.first}
+      checked={selectedInput.first}
+    />
+    <input
+      type="radio"
+      id="input-option"
+      name="input-option"
+      value={value.second}
+      checked={selectedInput.second}
+    />
+  {/if}
 </div>
 
 <!-------------- Visible input--------------->
@@ -59,13 +79,15 @@
   class="input-interface-wrapper std-flex-justify-start std-flex-align-end std-flex-nowrap"
 >
   {#if label}
-    <p class="gender-option-label">{label}:</p>
+    <p class="option-option-label">{label}:</p>
   {/if}
 
-  <!-------------- male gender option --------------->
-  <div class="gender-option" on:click={() => handleGenderChoice(1)}>
-    <span class="std-bkg std-icon option-selected {selectedGenderColor.male}" />
-    <p class="option-letter {selectedGenderColor.male}">{valueLabel.first}</p>
+  <!--------------first option option --------------->
+  <div class="option-option" on:click={() => handleoptionChoice(1)}>
+    <span
+      class="std-bkg std-icon option-selected {selectedoptionColor.first}"
+    />
+    <p class="option-letter {selectedoptionColor.first}">{valueLabel.first}</p>
     <div class="svg-wrapper">
       <svg>
         <path
@@ -78,12 +100,12 @@
     </div>
   </div>
 
-  <!-------------- female gender option --------------->
-  <div class="gender-option" on:click={() => handleGenderChoice(2)}>
+  <!-------------- second option option --------------->
+  <div class="option-option" on:click={() => handleoptionChoice(2)}>
     <span
-      class="std-bkg std-icon option-selected {selectedGenderColor.female}"
+      class="std-bkg std-icon option-selected {selectedoptionColor.second}"
     />
-    <p class="option-letter {selectedGenderColor.female}">
+    <p class="option-letter {selectedoptionColor.second}">
       {valueLabel.second}
     </p>
     <div class="svg-wrapper">
@@ -114,14 +136,14 @@
     margin: var(--medium-spacing) auto;
   }
 
-  .gender-option-label {
+  .option-option-label {
     text-align: left;
     margin: 0;
     width: 30%;
   }
 
-  /* --------- gender option -------- */
-  .gender-option {
+  /* --------- option option -------- */
+  .option-option {
     margin: 0 var(--medium-spacing) 0 var(--xsmall-spacing);
     position: relative;
     width: 30%;
